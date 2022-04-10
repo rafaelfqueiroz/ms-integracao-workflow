@@ -1,0 +1,14 @@
+kafka:
+  bootstrap:
+    servers: localhost:9092
+  consumer:
+    comando:
+      topic: comando.topic
+
+
+workflow:
+  service:
+    baseUrl: "https://app.pipefy.com"
+    token: ${WORKFLOW_AUTHORIZATION_TOKEN}
+    connectTimeoutMs: 5000
+    responseTimeoutMs: 5000
