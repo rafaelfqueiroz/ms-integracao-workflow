@@ -4,6 +4,7 @@ import com.github.rafaelfqueiroz.msintegracaoworkflow.service.model.Execucao;
 import com.github.rafaelfqueiroz.msintegracaoworkflow.service.model.SituacaoComando;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -25,7 +26,8 @@ public class ComandoDocument {
     private final UUID id;
     private final Map<String, Object> valores;
     private final String chaveWorkflow;
-    private final SituacaoComando situacao;
+    @Setter
+    private SituacaoComando situacao;
     private final Instant dataCriacao;
     @Builder.Default
     private final List<Execucao> execucoes = new ArrayList<>();

@@ -10,6 +10,6 @@ import java.util.UUID;
 @Getter
 public final class Execucao {
     private final UUID id;
-    private final SituacaoExececucao situacao;
+    private final SituacaoComando situacao;
     private final Instant dataCriacao;
 }
