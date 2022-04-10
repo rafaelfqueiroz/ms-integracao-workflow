@@ -9,28 +9,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
 @Service
-public class PipefyClientIntegrator {
+public class PipefyClientIntegration implements WorkflowIntegration {
 
     private final String query;
     private final String authorizationToken;
     private final WebClient webClient;
 
-    public PipefyClientIntegrator(@Qualifier("createCardMutation") String query,
-                                  @Value("${workflow.service.token}") String token,
-                                  WebClient webClient) {
+    public PipefyClientIntegration(@Qualifier("createCardMutation") String query,
+                                   @Value("${workflow.service.token}") String token,
+                                   WebClient webClient) {
         this.query = query;
         this.webClient = webClient;
         this.authorizationToken = token;
     }
 
-    public void startWorkflow(List<String> requiredValues,
-                              Map<String, Object> providedValues) {
+    public void startWorkflow(Map<String, Object> providedValues) {
 
         Optional<ResponseEntity<Void>> response = webClient.post()
                 .uri("/graphql")
