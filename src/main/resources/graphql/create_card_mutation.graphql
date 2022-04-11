@@ -1,23 +1,6 @@
-mutation {
+mutation($createCardData: CreateCardInput!) {
     createCard(
-        input: {
-            pipe_id: $pipeId,
-            phase_id: $phaseId,
-            fields_attributes: [
-                {
-                    field_id: "nome_cliente",
-                    field_value: $nomeCliente
-                },
-                {
-                    field_id: "email_cliente",
-                    field_value: $emailCliente
-                },
-                {
-                    field_id: "c_digo_cliente",
-                    field_value: $codigoMercadoria
-                }
-            ]
-        }
+        input: $createCardData
     ) {
         card {
             id

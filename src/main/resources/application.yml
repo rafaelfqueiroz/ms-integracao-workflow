@@ -1,14 +1,34 @@
+server:
+  port: 8082
+
+spring:
+  main:
+    banner-mode: off
+  data:
+    mongodb:
+      uri: mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@m220-mflix.xfd1g.mongodb.net/${MONGO_DB_NAME}?retryWrites=true&w=majority
+      uuid-representation: STANDARD
+
 kafka:
   bootstrap:
-    servers: localhost:9092
+    servers: pkc-2396y.us-east-1.aws.confluent.cloud:9092
   consumer:
     comando:
       topic: comando.topic
+  properties:
+    security-protocol: SASL_SSL
+    sasl-mechanism: PLAIN
+    client-dns-lookup: use_all_dns_ips
+    sasl-jaas-config: org.apache.kafka.common.security.plain.PlainLoginModule   required username='${KAFKA_SASL_USERNAME}'   password='${KAFKA_SASL_PASSWORD}';
+    session-timeout-ms: 45000
 
 
 workflow:
   service:
     baseUrl: "https://app.pipefy.com"
-    token: ${WORKFLOW_AUTHORIZATION_TOKEN}
+    pipefy:
+      token: ${WORKFLOW_AUTHORIZATION_TOKEN}
+      pipeId: 302353237
+      phaseId: 314910500
     connectTimeoutMs: 5000
     responseTimeoutMs: 5000

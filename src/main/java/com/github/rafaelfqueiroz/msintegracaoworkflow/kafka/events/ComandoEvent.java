@@ -10,7 +10,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public final class ComandoEvent {
 
-    private String chaveWorkflow;
-    private Map<String, Object> valores;
+    private final String chaveWorkflow;
+    private final Map<String, Object> valores;
 
 }

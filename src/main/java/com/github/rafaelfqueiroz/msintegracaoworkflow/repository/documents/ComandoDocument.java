@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Builder
 @Getter
-@Document("comandos")
+@Document("commands")
 public class ComandoDocument {
 
     @Id

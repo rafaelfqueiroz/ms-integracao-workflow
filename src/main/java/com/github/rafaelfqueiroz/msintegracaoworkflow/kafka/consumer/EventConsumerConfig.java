@@ -8,16 +8,21 @@ import com.github.rafaelfqueiroz.msintegracaoworkflow.kafka.events.ComandoEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.CommonErrorHandler;
+import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
+import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.util.backoff.FixedBackOff;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +36,7 @@ import static org.apache.kafka.clients.consumer.ConsumerConfig.BOOTSTRAP_SERVERS
 
 @EnableKafka
 @Configuration
+@EnableConfigurationProperties(KafkaProperties.class)
 public class EventConsumerConfig {
 
     @Value("${kafka.bootstrap.servers}")
@@ -75,6 +81,14 @@ public class EventConsumerConfig {
                 .disable(WRITE_DURATIONS_AS_TIMESTAMPS)
                 .registerModule(new Jdk8Module())
                 .registerModule(new JavaTimeModule());
+    }
+
+    @Bean
+    public CommonErrorHandler commonErrorHandler(
+            @Qualifier("deadLetterKafkaTemplate") KafkaTemplate<String, Object> kafkaTemplate) {
+        return new DefaultErrorHandler(
+                new DeadLetterPublishingRecoverer(kafkaTemplate),
+                new FixedBackOff(500L, 2L));
     }
 
     @Bean("deadLetterKafkaTemplate")

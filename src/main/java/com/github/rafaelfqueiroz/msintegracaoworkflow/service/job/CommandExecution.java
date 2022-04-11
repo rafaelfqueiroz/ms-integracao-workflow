@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -31,12 +32,13 @@ public final class CommandExecution {
      */
     @Scheduled(initialDelay = 1L, fixedRate = 120L, timeUnit = TimeUnit.SECONDS)
     public void executaComandoAsync() {
-        Optional<ComandoDocument> comandoDocumentOptional = comandoRepository.findFirstPendingOrderByDataCriacao();
-        if (!comandoDocumentOptional.isPresent()) {
+        List<ComandoDocument> comandosPendentes = comandoRepository.findFirstPendingOrderByDataCriacao();
+
+        if (comandosPendentes.isEmpty()) {
             log.info("Nenhum comando pendente de execução.");
             return;
         }
-        final var comandoDocument = comandoDocumentOptional.get();
+        final var comandoDocument = comandosPendentes.get(0);
         Optional<WorkflowDocument> workflowOptional = workflowRepository.findByChave(comandoDocument.getChaveWorkflow());
 
         if (!workflowOptional.isPresent()) {
@@ -51,8 +53,13 @@ public final class CommandExecution {
 
         SituacaoComando situacaoComando;
         if (containsRequiredValues) {
-            workflowIntegration.startWorkflow(comandoDocument.getValores());
-            situacaoComando = SituacaoComando.EXECUTED;
+            try {
+                workflowIntegration.startWorkflow(comandoDocument.getValores());
+                situacaoComando = SituacaoComando.EXECUTED;
+            } catch (Exception e) {
+                log.error("Falha na integração.", e);
+                situacaoComando = SituacaoComando.FAILED;
+            }
         } else {
             situacaoComando = SituacaoComando.FAILED;
         }
