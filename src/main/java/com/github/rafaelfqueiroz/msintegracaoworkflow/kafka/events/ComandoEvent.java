@@ -1,16 +1,19 @@
 package com.github.rafaelfqueiroz.msintegracaoworkflow.kafka.events;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
-import java.util.UUID;
 
 @Builder
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public final class ComandoEvent {
 
-    private final String chaveWorkflow;
-    private final Map<String, Object> valores;
+    private String chaveWorkflow;
+    private Map<String, Object> valores;
 
 }
