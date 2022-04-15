@@ -30,7 +30,7 @@ public final class CommandExecution {
     /**
      * Executa a cada 2 minutos, com delay inicial de 1 segundo.
      */
-    @Scheduled(initialDelay = 1L, fixedRate = 120L, timeUnit = TimeUnit.SECONDS)
+    @Scheduled(initialDelay = 1L, fixedRate = 5, timeUnit = TimeUnit.MINUTES)
     public void executaComandoAsync() {
         List<ComandoDocument> comandosPendentes = comandoRepository.findFirstPendingOrderByDataCriacao();
 
