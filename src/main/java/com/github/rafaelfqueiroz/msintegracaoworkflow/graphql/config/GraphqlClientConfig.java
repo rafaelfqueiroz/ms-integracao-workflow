@@ -30,7 +30,7 @@ public class GraphqlClientConfig {
     @Bean("createCardMutation")
     public String createCardMutation(
             @Value("classpath:graphql/create_card_mutation.graphql") Resource mutationFile) throws IOException {
-        return new String(Files.readAllBytes(mutationFile.getFile().toPath()));
+        return new String(mutationFile.getInputStream().readAllBytes());
     }
 
     @Bean
